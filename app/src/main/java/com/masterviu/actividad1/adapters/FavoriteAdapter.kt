@@ -25,4 +25,5 @@ class FavoriteAdapter(private val favorites:List<ContentFavorites>, private val 
         }
 
     }
+    
 }
