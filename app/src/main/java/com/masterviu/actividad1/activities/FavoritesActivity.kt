@@ -3,6 +3,10 @@ package com.masterviu.actividad1.activities
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -20,6 +24,8 @@ class FavoritesActivity : AppCompatActivity() {
         Peliculas,
         Canciones,
         Libros,
+        Deportes,
+        Varios,
     )
 
     private val favorites = mutableListOf(
@@ -50,7 +56,42 @@ class FavoritesActivity : AppCompatActivity() {
     private fun showDialogNewFavorite() {
         val dialogNewFavorite = Dialog(this)
         dialogNewFavorite.setContentView(R.layout.dialog_new_favorite)
+
+        // Eventos dentro del Dialog
+        val btnNewFavorite: Button = dialogNewFavorite.findViewById(R.id.btnNewFavorite)
+        val etNewFavorite: EditText = dialogNewFavorite.findViewById(R.id.etNewFavorite)
+        val grbListTypeMedia: RadioGroup = dialogNewFavorite.findViewById(R.id.grbListTypeMedia)
+
+        btnNewFavorite.setOnClickListener {
+            // Aquí capturo el RadioButton seleccionado por el usuario
+            val currentFavorite = etNewFavorite.text.toString()
+            if(currentFavorite.isNotEmpty()) {
+                val selectedTypeMedia = grbListTypeMedia.checkedRadioButtonId
+                val selectedRadioButton: RadioButton = grbListTypeMedia.findViewById(selectedTypeMedia)
+                val currentCategory: ContentTypeMedia = when (selectedRadioButton.text) {
+                    getString(R.string.ContentTypeMediaSeries) -> Series
+                    getString(R.string.ContentTypeMediaPeliculas) -> Peliculas
+                    getString(R.string.ContentTypeMediaCanciones) -> Canciones
+                    getString(R.string.ContentTypeMediaLibros) -> Libros
+                    else -> Varios
+                }
+                favorites.add(ContentFavorites(currentFavorite, currentCategory))
+                updateFavorites()
+                dialogNewFavorite.hide()
+            }
+        }
         dialogNewFavorite.show()
+    }
+
+    // Actualizando la lista para tachar los items, esta es una función LAMBDA que invocaremos posteriormente en el adaptador
+    private fun onItemSelected(position:Int) {
+        favorites[position].isSelected = !favorites[position].isSelected
+        updateFavorites()
+    }
+
+    // Esta función notifica al adaptor para que se entere que se han agregado nuevos items
+    private fun updateFavorites() {
+        favoriteAdapter.notifyDataSetChanged()
     }
 
     private fun initComponent() {
@@ -64,7 +105,9 @@ class FavoritesActivity : AppCompatActivity() {
         rvTypeMedia.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvTypeMedia.adapter = typeMediaAdapter
 
-        favoriteAdapter = FavoriteAdapter(favorites)
+        // El primer parametro para nuestro adaptador es la lista de objetos
+        // El segundo parametro es la función Lambda que nos permite actualizar el item seleccionado para tacharlo en la posición elegida por el usuario
+        favoriteAdapter = FavoriteAdapter(favorites, {position -> onItemSelected(position)})
         rvFavorites.layoutManager = LinearLayoutManager(this)
         rvFavorites.adapter = favoriteAdapter
 
