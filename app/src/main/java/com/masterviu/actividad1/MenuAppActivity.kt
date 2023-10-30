@@ -21,8 +21,6 @@ class MenuAppActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun navigateToFavorites() {
         val intentFavoritos = Intent(this, FavoritesActivity::class.java)
         startActivity(intentFavoritos)
