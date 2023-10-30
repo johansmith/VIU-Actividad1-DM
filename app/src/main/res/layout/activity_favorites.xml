@@ -70,11 +70,7 @@
         android:src="@drawable/ic_add"
         app:tint="@color/white"
         android:layout_gravity="right|bottom"
-<<<<<<< HEAD
-        app:fabSize="mini"
-=======
         app:fabSize="normal"
->>>>>>> 1c482c4 (D05 - Tachado de items)
         android:backgroundTint="@color/background_primary"/>
 
 </FrameLayout>
