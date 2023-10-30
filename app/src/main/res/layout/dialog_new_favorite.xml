@@ -68,7 +68,11 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:text="@string/text_button_new_favorite" />
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 1c482c4 (D05 - Tachado de items)
     </RadioGroup>
 
 
